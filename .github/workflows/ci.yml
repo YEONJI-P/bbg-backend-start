@@ -20,15 +20,16 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    # Gradle 래퍼 권한 부여 (리눅스 환경 대응)
+# 최신 권장 액션으로 교체 (경고 해결)
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v4
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    # Gradle 빌드 및 테스트 실행
+    # 직접 gradlew 명령어를 실행하는 방식이 현재 표준입니다
     - name: Build with Gradle
-      uses: gradle/gradle-build-action@v3
-      with:
-        arguments: build
+      run: ./gradlew build
 
     # 빌드된 Jar 파일을 Docker 이미지로 빌드 테스트
     - name: Docker image build check
