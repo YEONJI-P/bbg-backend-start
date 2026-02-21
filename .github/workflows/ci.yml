@@ -1,0 +1,35 @@
+name: Java CI/CD with Gradle
+
+on:
+  push:
+    branches: [ "main" ] # 부기님의 메인 브랜치명 확인 (main 또는 master)
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    # Gradle 래퍼 권한 부여 (리눅스 환경 대응)
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    # Gradle 빌드 및 테스트 실행
+    - name: Build with Gradle
+      uses: gradle/gradle-build-action@v3
+      with:
+        arguments: build
+
+    # 빌드된 Jar 파일을 Docker 이미지로 빌드 테스트
+    - name: Docker image build check
+      run: docker build -t bbg-app .
