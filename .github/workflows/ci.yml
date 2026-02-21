@@ -34,3 +34,25 @@ jobs:
     # 빌드된 Jar 파일을 Docker 이미지로 빌드 테스트
     - name: Docker image build check
       run: docker build -t bbg-app .
+
+
+# 1. GCP 인증 (Workload Identity Federation 방식)
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v2'
+      with:
+        # 방금 터미널에서 복사한 그 주소를 여기에 '따옴표' 안에 넣으세요!
+        workload_identity_provider: 'projects/142990968320/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+        service_account: 'github-action-pusher@project-f4d2acb6-c4a9-4f38-9be.iam.gserviceaccount.com'
+
+    # 2. Docker를 GCP Artifact Registry에 로그인 시키기
+    - name: 'Docker Login'
+      run: |
+        gcloud auth configure-docker asia-northeast3-docker.pkg.dev
+
+    # 3. 이미지 빌드 및 푸시 (서울 리전 저장소 주소 사용)
+    # 프로젝트 ID가 복잡하므로 직접 적어주는 것이 안전합니다.
+    - name: 'Build and Push'
+      run: |
+        
+        docker build -t asia-northeast3-docker.pkg.dev/project-f4d2acb6-c4a9-4f38-9be/bbg-docker-repo/bbg-app:latest .
+        docker push asia-northeast3-docker.pkg.dev/project-f4d2acb6-c4a9-4f38-9be/bbg-docker-repo/bbg-app:latest
