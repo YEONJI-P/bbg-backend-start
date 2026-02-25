@@ -1,9 +1,9 @@
 spring:
   datasource:
     # URL도 변수를 활용해 동적으로 구성
-    url: jdbc:postgresql:///${DB_NAME}?cloudSqlInstance=${DB_INSTANCE_NAME}&socketFactory=com.google.cloud.sql.postgres.SocketFactory
+    url: jdbc:postgresql:///${DB_NAME:default_name}?cloudSqlInstance=${DB_INSTANCE_NAME:default_name}&socketFactory=com.google.cloud.sql.postgres.SocketFactory
     username: postgres
-    password: ${DB_PASSWORD}
+    password: ${DB_PASSWORD:default_pass}
     
   jpa:
     hibernate:
