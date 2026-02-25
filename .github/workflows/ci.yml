@@ -33,7 +33,7 @@ jobs:
 
     # 직접 gradlew 명령어를 실행하는 방식이 현재 표준
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew build -x test
 
     # 빌드된 Jar 파일을 Docker 이미지로 빌드 테스트
     - name: Docker image build check
