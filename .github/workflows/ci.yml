@@ -2,14 +2,14 @@ name: Java CI/CD with Gradle
 
 on:
   push:
-    branches: [ "main" ] # 부기님의 메인 브랜치명 확인 (main 또는 master)
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-# [여기가 핵심!] ID 토큰을 발급받을 수 있는 권한을 명시합니다.
+# ID 토큰을 발급받을 수 있는 권한 명시
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -31,7 +31,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    # 직접 gradlew 명령어를 실행하는 방식이 현재 표준입니다
+    # 직접 gradlew 명령어를 실행하는 방식이 현재 표준
     - name: Build with Gradle
       run: ./gradlew build
 
@@ -44,7 +44,6 @@ jobs:
     - id: 'auth'
       uses: 'google-github-actions/auth@v2'
       with:
-        # 방금 터미널에서 복사한 그 주소를 여기에 '따옴표' 안에 넣으세요!
         workload_identity_provider: 'projects/142990968320/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
         service_account: 'github-action-pusher@project-f4d2acb6-c4a9-4f38-9be.iam.gserviceaccount.com'
 
@@ -54,9 +53,17 @@ jobs:
         gcloud auth configure-docker asia-northeast3-docker.pkg.dev
 
     # 3. 이미지 빌드 및 푸시 (서울 리전 저장소 주소 사용)
-    # 프로젝트 ID가 복잡하므로 직접 적어주는 것이 안전합니다.
+    # 프로젝트 ID가 복잡하므로 직접 적어주는 것이 안전
     - name: 'Build and Push'
       run: |
         
         docker build -t asia-northeast3-docker.pkg.dev/project-f4d2acb6-c4a9-4f38-9be/bbg-docker-repo/bbg-app:latest .
         docker push asia-northeast3-docker.pkg.dev/project-f4d2acb6-c4a9-4f38-9be/bbg-docker-repo/bbg-app:latest
+
+    - name: 'Deploy to Cloud Run'
+      run: |
+        gcloud run deploy bbg-app-service \
+          --image asia-northeast3-docker.pkg.dev/project-f4d2acb6-c4a9-4f38-9be/bbg-docker-repo/bbg-app:latest \
+          --region asia-northeast3 \
+          --platform managed \
+          --allow-unauthenticated
