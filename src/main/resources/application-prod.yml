@@ -3,7 +3,7 @@ spring:
     # URL도 변수를 활용해 동적으로 구성
     url: jdbc:postgresql:///${DB_NAME}?cloudSqlInstance=${DB_INSTANCE_NAME}&socketFactory=com.google.cloud.sql.postgres.SocketFactory
     username: postgres
-    password: ${DB_PASSWORD}  # 환경 변수에서 가져옴
+    password: ${DB_PASSWORD}
     
   jpa:
     hibernate:
