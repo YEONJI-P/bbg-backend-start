@@ -1,4 +1,4 @@
-package com.bbg.Guestbook;
+package com.bbg.backend_start.guestbook;
 
 import java.util.List;
 
@@ -19,12 +19,12 @@ public class GuestbookController {
     private final GuestbookRepository repository;
 
     @PostMapping
-    public Gusetbook postMethodName(@RequestBody Gusetbook gusetbook) {
+    public Guestbook postMethodName(@RequestBody Guestbook gusetbook) {
         return repository.save(gusetbook);
     }
     
     @GetMapping
-    public List<Gusetbook> read() {
+    public List<Guestbook> read() {
         return repository.findAll();
     }
     

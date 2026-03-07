@@ -1,4 +1,4 @@
-package com.bbg.Guestbook;
+package com.bbg.backend_start.guestbook;
 
 import java.time.LocalDateTime;
 
@@ -11,7 +11,7 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-public class Gusetbook {
+public class Guestbook {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
